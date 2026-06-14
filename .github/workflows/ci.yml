@@ -34,3 +34,28 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t node-api-boilerplate .
+
+      - name: Smoke-test the container
+        run: |
+          docker run -d --name api -p 3000:3000 node-api-boilerplate
+          for i in $(seq 1 10); do
+            if curl -fs http://localhost:3000/health; then
+              echo "container is healthy"
+              docker rm -f api
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "container did not become healthy"
+          docker logs api
+          exit 1
