@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log*
+coverage
+.git
+.gitignore
+.github
+.env
+.env.*
+!.env.example
+*.md
+tests
+.eslintrc*
+eslint.config.js
+.prettier*
